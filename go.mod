@@ -23,7 +23,7 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	github.com/sykesm/zap-logfmt v0.0.4 // indirect
-	github.com/tjfoc/gmsm v1.4.0
+	github.com/tjfoc/gmsm v1.3.1
 	github.com/tjfoc/gmtls v1.2.1
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
 	golang.org/x/net v0.0.0-20210423184538-5f58ad60dda6
