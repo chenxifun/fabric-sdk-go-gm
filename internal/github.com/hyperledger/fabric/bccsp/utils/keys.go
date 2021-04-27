@@ -32,6 +32,7 @@ import (
 	"fmt"
 
 	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 )
 
 // struct to hold info required for PKCS#8
@@ -152,7 +153,7 @@ func PrivateKeyToPEM(privateKey interface{}, pwd []byte) ([]byte, error) {
 		if k == nil {
 			return nil, errors.New("Invalid sm2 private key. It must be different from nil.")
 		}
-		return sm2.WritePrivateKeytoMem(k, nil)
+		return gmx509.WritePrivateKeyToPem(k, nil)
 	default:
 		return nil, errors.New("Invalid key type. It must be *ecdsa.PrivateKey or *rsa.PrivateKey")
 	}
@@ -192,7 +193,7 @@ func PrivateKeyToEncryptedPEM(privateKey interface{}, pwd []byte) ([]byte, error
 			return nil, errors.New("Invalid sm2 private key. It must be different from nil.")
 		}
 
-		return sm2.WritePrivateKeytoMem(k, pwd)
+		return gmx509.WritePrivateKeyToPem(k, pwd)
 	default:
 		return nil, errors.New("Invalid key type. It must be *ecdsa.PrivateKey")
 	}
@@ -217,7 +218,7 @@ func DERToPrivateKey(der []byte) (key interface{}, err error) {
 	if key, err = x509.ParseECPrivateKey(der); err == nil {
 		return
 	}
-	if key, err := sm2.ParsePKCS8UnecryptedPrivateKey(der); err == nil {
+	if key, err := gmx509.ParsePKCS8UnecryptedPrivateKey(der); err == nil {
 		return key, nil
 	}
 
@@ -359,7 +360,7 @@ func PublicKeyToPEM(publicKey interface{}, pwd []byte) ([]byte, error) {
 			return nil, errors.New("Invalid sm2 public key. It must be different from nil.")
 		}
 
-		return sm2.WritePublicKeytoMem(k, nil)
+		return gmx509.WritePublicKeyToPem(k)
 	default:
 		return nil, errors.New("Invalid key type. It must be *ecdsa.PublicKey or *rsa.PublicKey")
 	}
@@ -435,7 +436,7 @@ func PublicKeyToEncryptedPEM(publicKey interface{}, pwd []byte) ([]byte, error) 
 			return nil, errors.New("Invalid ecdsa public key. It must be different from nil.")
 		}
 
-		return sm2.WritePublicKeytoMem(k, nil)
+		return gmx509.WritePublicKeyToPem(k)
 	default:
 		return nil, errors.New("Invalid key type. It must be *ecdsa.PublicKey")
 	}
@@ -484,7 +485,7 @@ func DERToPublicKey(raw []byte) (pub interface{}, err error) {
 
 	key, err1 := x509.ParsePKIXPublicKey(raw)
 	if err1 != nil {
-		key, err = sm2.ParseSm2PublicKey(raw)
+		key, err = gmx509.ParseSm2PublicKey(raw)
 	}
 
 	return key, err

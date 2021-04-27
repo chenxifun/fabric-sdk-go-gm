@@ -8,8 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 package verifier
 
 import (
-	// "crypto/x509"
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	"time"
 
 	"github.com/BSNDA/fabric-sdk-go-gm/internal/github.com/hyperledger/fabric/bccsp/utils"
@@ -66,7 +65,7 @@ func (v *Signature) Match(response []*fab.TransactionProposalResponse) error {
 }
 
 //ValidateCertificateDates used to verify if certificate was expired or not valid until later date
-func ValidateCertificateDates(cert *sm2.Certificate) error {
+func ValidateCertificateDates(cert *gmx509.Certificate) error {
 	if cert == nil {
 		return nil
 	}
@@ -81,7 +80,7 @@ func ValidateCertificateDates(cert *sm2.Certificate) error {
 }
 
 //VerifyPeerCertificate verifies raw certs and chain certs for expiry and not yet valid dates
-func VerifyPeerCertificate(rawCerts [][]byte, verifiedChains [][]*sm2.Certificate) error {
+func VerifyPeerCertificate(rawCerts [][]byte, verifiedChains [][]*gmx509.Certificate) error {
 	for _, chaincert := range rawCerts {
 		cert, err := utils.DERToX509Certificate(chaincert)
 		if err != nil {

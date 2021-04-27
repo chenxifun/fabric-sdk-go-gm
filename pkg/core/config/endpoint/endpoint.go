@@ -8,8 +8,8 @@ package endpoint
 
 import (
 	"encoding/pem"
-	// "crypto/x509"
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
+
 	"io/ioutil"
 	"strings"
 
@@ -106,12 +106,12 @@ func (cfg *TLSConfig) LoadBytes() error {
 }
 
 // TLSCert returns the tls certificate as a *sm2.Certificate by loading it either from the embedded Pem or Path
-func (cfg *TLSConfig) TLSCert() (*sm2.Certificate, bool, error) {
+func (cfg *TLSConfig) TLSCert() (*gmx509.Certificate, bool, error) {
 
 	block, _ := pem.Decode(cfg.bytes)
 
 	if block != nil {
-		pub, err := sm2.ParseCertificate(block.Bytes)
+		pub, err := gmx509.ParseCertificate(block.Bytes)
 		if err != nil {
 			return nil, false, errors.Wrap(err, "certificate parsing failed")
 		}

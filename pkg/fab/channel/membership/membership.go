@@ -8,7 +8,7 @@ package membership
 
 import (
 	"encoding/pem"
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 
 	"strings"
 
@@ -89,7 +89,7 @@ func areCertDatesValid(serializedID []byte) error {
 	if bl == nil {
 		return errors.New("could not decode the PEM structure")
 	}
-	cert, err := sm2.ParseCertificate(bl.Bytes)
+	cert, err := gmx509.ParseCertificate(bl.Bytes)
 	if err != nil {
 		return err
 	}
@@ -221,7 +221,7 @@ func addCertsToConfig(config fab.EndpointConfig, pemCertsList [][]byte) {
 		return
 	}
 
-	var certs []*sm2.Certificate
+	var certs []*gmx509.Certificate
 	for _, pemCerts := range pemCertsList {
 		for len(pemCerts) > 0 {
 			var block *pem.Block
@@ -233,7 +233,7 @@ func addCertsToConfig(config fab.EndpointConfig, pemCertsList [][]byte) {
 				continue
 			}
 
-			cert, err := sm2.ParseCertificate(block.Bytes)
+			cert, err := gmx509.ParseCertificate(block.Bytes)
 			if err != nil {
 				continue
 			}

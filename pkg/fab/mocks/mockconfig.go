@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package mocks
 
 import (
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	"path/filepath"
 	"time"
 
@@ -19,7 +20,6 @@ import (
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/providers/msp"
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/providers/test/mockfab"
 	"github.com/pkg/errors"
-	"github.com/tjfoc/gmsm/sm2"
 	tls "github.com/tjfoc/gmtls"
 )
 
@@ -155,7 +155,7 @@ func (c *MockConfig) TLSCACertPool() fab.CertPool {
 	} else if c.CustomTLSCACertPool != nil {
 		return c.CustomTLSCACertPool
 	}
-	return &mockfab.MockCertPool{CertPool: sm2.NewCertPool()}
+	return &mockfab.MockCertPool{CertPool: gmx509.NewCertPool()}
 }
 
 // TcertBatchSize ...

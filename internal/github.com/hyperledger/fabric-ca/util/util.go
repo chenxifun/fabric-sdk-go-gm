@@ -28,6 +28,7 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	"io/ioutil"
 	"math/big"
 	mrand "math/rand"
@@ -268,7 +269,7 @@ func GetX509CertificateFromPEM(cert []byte) (*x509.Certificate, error) {
 		return nil, errors.New("Failed to PEM decode certificate")
 	}
 	var x509Cert *x509.Certificate
-	sm2x509Cert, err := sm2.ParseCertificate(block.Bytes)
+	sm2x509Cert, err := gmx509.ParseCertificate(block.Bytes)
 	if err == nil {
 		x509Cert = ParseSm2Certificate2X509(sm2x509Cert)
 	}
@@ -364,7 +365,7 @@ func GetMaskedURL(url string) string {
 }
 
 //sm2 证书转换 x509 证书
-func ParseSm2Certificate2X509(sm2Cert *sm2.Certificate) *x509.Certificate {
+func ParseSm2Certificate2X509(sm2Cert *gmx509.Certificate) *x509.Certificate {
 	x509cert := &x509.Certificate{
 		Raw:                     sm2Cert.Raw,
 		RawTBSCertificate:       sm2Cert.RawTBSCertificate,
@@ -433,8 +434,8 @@ func ParseSm2Certificate2X509(sm2Cert *sm2.Certificate) *x509.Certificate {
 }
 
 // X509证书格式转换为 SM2证书格式
-func ParseX509Certificate2Sm2(x509Cert *x509.Certificate) *sm2.Certificate {
-	sm2cert := &sm2.Certificate{
+func ParseX509Certificate2Sm2(x509Cert *x509.Certificate) *gmx509.Certificate {
+	sm2cert := &gmx509.Certificate{
 		Raw:                     x509Cert.Raw,
 		RawTBSCertificate:       x509Cert.RawTBSCertificate,
 		RawSubjectPublicKeyInfo: x509Cert.RawSubjectPublicKeyInfo,
@@ -442,9 +443,9 @@ func ParseX509Certificate2Sm2(x509Cert *x509.Certificate) *sm2.Certificate {
 		RawIssuer:               x509Cert.RawIssuer,
 
 		Signature:          x509Cert.Signature,
-		SignatureAlgorithm: sm2.SignatureAlgorithm(x509Cert.SignatureAlgorithm),
+		SignatureAlgorithm: gmx509.SignatureAlgorithm(x509Cert.SignatureAlgorithm),
 
-		PublicKeyAlgorithm: sm2.PublicKeyAlgorithm(x509Cert.PublicKeyAlgorithm),
+		PublicKeyAlgorithm: gmx509.PublicKeyAlgorithm(x509Cert.PublicKeyAlgorithm),
 		PublicKey:          x509Cert.PublicKey,
 
 		Version:      x509Cert.Version,
@@ -453,7 +454,7 @@ func ParseX509Certificate2Sm2(x509Cert *x509.Certificate) *sm2.Certificate {
 		Subject:      x509Cert.Subject,
 		NotBefore:    x509Cert.NotBefore,
 		NotAfter:     x509Cert.NotAfter,
-		KeyUsage:     sm2.KeyUsage(x509Cert.KeyUsage),
+		KeyUsage:     gmx509.KeyUsage(x509Cert.KeyUsage),
 
 		Extensions: x509Cert.Extensions,
 
@@ -495,7 +496,7 @@ func ParseX509Certificate2Sm2(x509Cert *x509.Certificate) *sm2.Certificate {
 		PolicyIdentifiers: x509Cert.PolicyIdentifiers,
 	}
 	for _, val := range x509Cert.ExtKeyUsage {
-		sm2cert.ExtKeyUsage = append(sm2cert.ExtKeyUsage, sm2.ExtKeyUsage(val))
+		sm2cert.ExtKeyUsage = append(sm2cert.ExtKeyUsage, gmx509.ExtKeyUsage(val))
 	}
 
 	return sm2cert

@@ -21,11 +21,10 @@ Please review third_party pinning scripts and patches for more details.
 package utils
 
 import (
-	// "crypto/x509"
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 )
 
 // DERToX509Certificate converts der to x509
-func DERToX509Certificate(asn1Data []byte) (*sm2.Certificate, error) {
-	return sm2.ParseCertificate(asn1Data)
+func DERToX509Certificate(asn1Data []byte) (*gmx509.Certificate, error) {
+	return gmx509.ParseCertificate(asn1Data)
 }

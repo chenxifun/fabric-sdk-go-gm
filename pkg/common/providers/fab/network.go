@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package fab
 
 import (
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	"time"
 
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/errors/retry"
@@ -127,14 +127,14 @@ type OrganizationConfig struct {
 type OrdererConfig struct {
 	URL         string
 	GRPCOptions map[string]interface{}
-	TLSCACert   *sm2.Certificate
+	TLSCACert   *gmx509.Certificate
 }
 
 // PeerConfig defines a peer configuration
 type PeerConfig struct {
 	URL         string
 	GRPCOptions map[string]interface{}
-	TLSCACert   *sm2.Certificate
+	TLSCACert   *gmx509.Certificate
 }
 
 // CertKeyPair contains the private key and certificate

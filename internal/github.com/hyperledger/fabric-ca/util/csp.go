@@ -29,6 +29,7 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	"io/ioutil"
 	"strings"
 
@@ -140,7 +141,7 @@ func GetSignerFromCertFile(certFile string, csp core.CryptoSuite) (core.Key, cry
 }
 
 // GetSignerFromSM2Cert load private key represented by ski and return bccsp signer that conforms to crypto.Signer
-func GetSignerFromSM2Cert(cert *sm2.Certificate, csp core.CryptoSuite) (core.Key, crypto.Signer, error) {
+func GetSignerFromSM2Cert(cert *gmx509.Certificate, csp core.CryptoSuite) (core.Key, crypto.Signer, error) {
 	if csp == nil {
 		return nil, nil, fmt.Errorf("CSP was not initialized")
 	}
@@ -347,7 +348,7 @@ func LoadX509KeyPairSM2(certFile, keyFile string, csp core.CryptoSuite) (*gtls.C
 		return nil, errors.Errorf("Failed to find \"CERTIFICATE\" PEM block in file %s after skipping PEM blocks of the following types: %v", certFile, skippedBlockTypes)
 	}
 
-	sm2Cert, err := sm2.ParseCertificate(cert.Certificate[0])
+	sm2Cert, err := gmx509.ParseCertificate(cert.Certificate[0])
 	if err != nil {
 		return nil, err
 	}

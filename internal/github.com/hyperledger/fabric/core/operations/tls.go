@@ -11,8 +11,7 @@ Please review third_party pinning scripts and patches for more details.
 package operations
 
 import (
-	// "crypto/tls"
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	tls "github.com/tjfoc/gmtls"
 	//"crypto/x509"
 	"io/ioutil"
@@ -36,7 +35,7 @@ func (t TLS) Config() (*tls.Config, error) {
 		if err != nil {
 			return nil, err
 		}
-		caCertPool := sm2.NewCertPool()
+		caCertPool := gmx509.NewCertPool()
 		for _, caPath := range t.ClientCACertFiles {
 			caPem, err := ioutil.ReadFile(caPath)
 			if err != nil {

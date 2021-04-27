@@ -14,12 +14,12 @@ import (
 	"bytes"
 	"crypto/x509/pkix"
 	"encoding/asn1"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	"math/big"
 	"reflect"
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/tjfoc/gmsm/sm2"
 )
 
 func (msp *bccspmsp) validateIdentity(id *identity) error {
@@ -58,7 +58,7 @@ func (msp *bccspmsp) validateCAIdentity(id *identity) error {
 	return msp.validateIdentityAgainstChain(id, validationChain)
 }
 
-func (msp *bccspmsp) validateTLSCAIdentity(cert *sm2.Certificate, opts *sm2.VerifyOptions) error {
+func (msp *bccspmsp) validateTLSCAIdentity(cert *gmx509.Certificate, opts *gmx509.VerifyOptions) error {
 	if !cert.IsCA {
 		return errors.New("Only CA identities can be validated")
 	}
@@ -75,11 +75,11 @@ func (msp *bccspmsp) validateTLSCAIdentity(cert *sm2.Certificate, opts *sm2.Veri
 	return msp.validateCertAgainstChain(cert, validationChain)
 }
 
-func (msp *bccspmsp) validateIdentityAgainstChain(id *identity, validationChain []*sm2.Certificate) error {
+func (msp *bccspmsp) validateIdentityAgainstChain(id *identity, validationChain []*gmx509.Certificate) error {
 	return msp.validateCertAgainstChain(id.cert, validationChain)
 }
 
-func (msp *bccspmsp) validateCertAgainstChain(cert *sm2.Certificate, validationChain []*sm2.Certificate) error {
+func (msp *bccspmsp) validateCertAgainstChain(cert *gmx509.Certificate, validationChain []*gmx509.Certificate) error {
 	// here we know that the identity is valid; now we have to check whether it has been revoked
 
 	// identify the SKI of the CA that signed this cert
@@ -261,13 +261,13 @@ func (msp *bccspmsp) validateIdentityOUsV142(id *identity) error {
 	return nil
 }
 
-func (msp *bccspmsp) getValidityOptsForCert(cert *sm2.Certificate) sm2.VerifyOptions {
+func (msp *bccspmsp) getValidityOptsForCert(cert *gmx509.Certificate) gmx509.VerifyOptions {
 	// First copy the opts to override the CurrentTime field
 	// in order to make the certificate passing the expiration test
 	// independently from the real local current time.
 	// This is a temporary workaround for FAB-3678
 
-	var tempOpts sm2.VerifyOptions
+	var tempOpts gmx509.VerifyOptions
 	tempOpts.Roots = msp.opts.Roots
 	tempOpts.DNSName = msp.opts.DNSName
 	tempOpts.Intermediates = msp.opts.Intermediates
@@ -322,7 +322,7 @@ func getAuthorityKeyIdentifierFromCrl(crl *pkix.CertificateList) ([]byte, error)
 
 // getSubjectKeyIdentifierFromCert returns the Subject Key Identifier for the supplied certificate
 // Subject Key Identifier is an identifier of the public key of this certificate
-func getSubjectKeyIdentifierFromCert(cert *sm2.Certificate) ([]byte, error) {
+func getSubjectKeyIdentifierFromCert(cert *gmx509.Certificate) ([]byte, error) {
 	var SKI []byte
 
 	for _, ext := range cert.Extensions {
@@ -344,7 +344,7 @@ func getSubjectKeyIdentifierFromCert(cert *sm2.Certificate) ([]byte, error) {
 // isCACert does a few checks on the certificate,
 // assuming it's a CA; it returns true if all looks good
 // and false otherwise
-func isCACert(cert *sm2.Certificate) bool {
+func isCACert(cert *gmx509.Certificate) bool {
 	_, err := getSubjectKeyIdentifierFromCert(cert)
 	if err != nil {
 		return false

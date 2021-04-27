@@ -12,6 +12,7 @@ package msp
 
 import (
 	"bytes"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 
 	"crypto/x509/pkix"
 	"fmt"
@@ -21,7 +22,6 @@ import (
 	"github.com/golang/protobuf/proto"
 	m "github.com/hyperledger/fabric-protos-go/msp"
 	errors "github.com/pkg/errors"
-	"github.com/tjfoc/gmsm/sm2"
 )
 
 func (msp *bccspmsp) getCertifiersIdentifier(certRaw []byte) ([]byte, error) {
@@ -63,9 +63,9 @@ func (msp *bccspmsp) getCertifiersIdentifier(certRaw []byte) ([]byte, error) {
 
 	// 3. get the certification path for it
 	var certifiersIdentifier []byte
-	var chain []*sm2.Certificate
+	var chain []*gmx509.Certificate
 	if root {
-		chain = []*sm2.Certificate{cert}
+		chain = []*gmx509.Certificate{cert}
 	} else {
 		chain, err = msp.getValidationChain(cert, true)
 		if err != nil {
@@ -116,7 +116,7 @@ func (msp *bccspmsp) setupCAs(conf *m.FabricMSPConfig) error {
 	// Recall that sanitization is applied also to root CA and intermediate
 	// CA certificates. After their sanitization is done, the opts
 	// will be recreated using the sanitized certs.
-	msp.opts = &sm2.VerifyOptions{Roots: sm2.NewCertPool(), Intermediates: sm2.NewCertPool()}
+	msp.opts = &gmx509.VerifyOptions{Roots: gmx509.NewCertPool(), Intermediates: gmx509.NewCertPool()}
 	for _, v := range conf.RootCerts {
 		cert, err := msp.getCertFromPem(v)
 		if err != nil {
@@ -156,7 +156,7 @@ func (msp *bccspmsp) setupCAs(conf *m.FabricMSPConfig) error {
 	}
 
 	// root CA and intermediate CA certificates are sanitized, they can be reimported
-	msp.opts = &sm2.VerifyOptions{Roots: sm2.NewCertPool(), Intermediates: sm2.NewCertPool()}
+	msp.opts = &gmx509.VerifyOptions{Roots: gmx509.NewCertPool(), Intermediates: gmx509.NewCertPool()}
 	for _, id := range msp.rootCerts {
 		msp.opts.Roots.AddCert(id.(*identity).cert)
 	}
@@ -203,7 +203,7 @@ func (msp *bccspmsp) setupCRLs(conf *m.FabricMSPConfig) error {
 	// setup the CRL (if present)
 	msp.CRL = make([]*pkix.CertificateList, len(conf.RevocationList))
 	for i, crlbytes := range conf.RevocationList {
-		crl, err := sm2.ParseCRL(crlbytes)
+		crl, err := gmx509.ParseCRL(crlbytes)
 		if err != nil {
 			return errors.Wrap(err, "could not parse RevocationList")
 		}
@@ -425,11 +425,11 @@ func (msp *bccspmsp) setupOUs(conf *m.FabricMSPConfig) error {
 
 func (msp *bccspmsp) setupTLSCAs(conf *m.FabricMSPConfig) error {
 
-	opts := &sm2.VerifyOptions{Roots: sm2.NewCertPool(), Intermediates: sm2.NewCertPool()}
+	opts := &gmx509.VerifyOptions{Roots: gmx509.NewCertPool(), Intermediates: gmx509.NewCertPool()}
 
 	// Load TLS root and intermediate CA identities
 	msp.tlsRootCerts = make([][]byte, len(conf.TlsRootCerts))
-	rootCerts := make([]*sm2.Certificate, len(conf.TlsRootCerts))
+	rootCerts := make([]*gmx509.Certificate, len(conf.TlsRootCerts))
 	for i, trustedCert := range conf.TlsRootCerts {
 		cert, err := msp.getCertFromPem(trustedCert)
 		if err != nil {
@@ -443,7 +443,7 @@ func (msp *bccspmsp) setupTLSCAs(conf *m.FabricMSPConfig) error {
 
 	// make and fill the set of intermediate certs (if present)
 	msp.tlsIntermediateCerts = make([][]byte, len(conf.TlsIntermediateCerts))
-	intermediateCerts := make([]*sm2.Certificate, len(conf.TlsIntermediateCerts))
+	intermediateCerts := make([]*gmx509.Certificate, len(conf.TlsIntermediateCerts))
 	for i, trustedCert := range conf.TlsIntermediateCerts {
 		cert, err := msp.getCertFromPem(trustedCert)
 		if err != nil {
@@ -456,7 +456,7 @@ func (msp *bccspmsp) setupTLSCAs(conf *m.FabricMSPConfig) error {
 	}
 
 	// ensure that our CAs are properly formed and that they are valid
-	for _, cert := range append(append([]*sm2.Certificate{}, rootCerts...), intermediateCerts...) {
+	for _, cert := range append(append([]*gmx509.Certificate{}, rootCerts...), intermediateCerts...) {
 		if cert == nil {
 			continue
 		}

@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package mockfab
 
 import (
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	tls "github.com/tjfoc/gmtls"
 	"time"
 
@@ -17,16 +17,16 @@ import (
 )
 
 // GoodCert is a mock of a good certificate
-var GoodCert = &sm2.Certificate{Raw: []byte{0, 1, 2}}
+var GoodCert = &gmx509.Certificate{Raw: []byte{0, 1, 2}}
 
 // BadCert is a mock of a bad certificate
-var BadCert = &sm2.Certificate{Raw: []byte{1, 2}}
+var BadCert = &gmx509.Certificate{Raw: []byte{1, 2}}
 
 // TLSCert is a mock of a tls.Certificate{}
 var TLSCert = tls.Certificate{Certificate: [][]byte{{3}, {4}}}
 
 // CertPool is a mock of a *sm2.CertPool
-var CertPool = sm2.NewCertPool()
+var CertPool = gmx509.NewCertPool()
 
 // ErrorMessage is a mock error message
 const ErrorMessage = "default error message"
@@ -44,7 +44,7 @@ func DefaultMockConfig(mockCtrl *gomock.Controller) *MockEndpointConfig {
 }
 
 // CustomMockConfig returns a custom mock config with custom certpool for testing
-func CustomMockConfig(mockCtrl *gomock.Controller, certPool *sm2.CertPool) *MockEndpointConfig {
+func CustomMockConfig(mockCtrl *gomock.Controller, certPool *gmx509.CertPool) *MockEndpointConfig {
 	config := NewMockEndpointConfig(mockCtrl)
 
 	config.EXPECT().TLSCACertPool().Return(&MockCertPool{CertPool: certPool}).AnyTimes()
@@ -68,16 +68,16 @@ func BadTLSClientMockConfig(mockCtrl *gomock.Controller) *MockEndpointConfig {
 
 //MockCertPool for unit tests to mock CertPool
 type MockCertPool struct {
-	CertPool *sm2.CertPool
+	CertPool *gmx509.CertPool
 	Err      error
 }
 
 //Get mock implementation of fab CertPool.Get()
-func (c *MockCertPool) Get() (*sm2.CertPool, error) {
+func (c *MockCertPool) Get() (*gmx509.CertPool, error) {
 	return c.CertPool, c.Err
 }
 
 //Add mock impl of adding certs to cert pool queue
-func (c *MockCertPool) Add(certs ...*sm2.Certificate) {
+func (c *MockCertPool) Add(certs ...*gmx509.Certificate) {
 
 }

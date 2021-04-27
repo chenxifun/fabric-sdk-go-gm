@@ -21,7 +21,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"github.com/cloudflare/cfssl/helpers"
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -228,13 +228,13 @@ func (c *Client) GenCSR(req *api.CSRInfo, id string) ([]byte, core.Key, error) {
 // an existing key. The KeyRequest field is ignored.
 func GenerateSM2(priv crypto.Signer, req *csr.CertificateRequest) (csr []byte, err error) {
 	sigAlgo := helpers.SignerAlgo(priv)
-	var sm2SigAlgo sm2.SignatureAlgorithm
+	var sm2SigAlgo gmx509.SignatureAlgorithm
 	if sigAlgo == x509.UnknownSignatureAlgorithm {
-		sm2SigAlgo = sm2.SM2WithSM3
+		sm2SigAlgo = gmx509.SM2WithSM3
 		//return nil, cferr.New(cferr.PrivateKeyError, cferr.Unavailable)
 	}
 
-	var tpl = sm2.CertificateRequest{
+	var tpl = gmx509.CertificateRequest{
 		Subject:            req.Name(),
 		SignatureAlgorithm: sm2SigAlgo,
 	}
@@ -245,7 +245,7 @@ func GenerateSM2(priv crypto.Signer, req *csr.CertificateRequest) (csr []byte, e
 		} else if email, err := mail.ParseAddress(req.Hosts[i]); err == nil && email != nil {
 			tpl.EmailAddresses = append(tpl.EmailAddresses, email.Address)
 		} else if uri, err := url.ParseRequestURI(req.Hosts[i]); err == nil && uri != nil {
-			tpl.URIs = append(tpl.URIs, uri)
+			//tpl.URIs = append(tpl.URIs, uri)
 		} else {
 			tpl.DNSNames = append(tpl.DNSNames, req.Hosts[i])
 		}
@@ -259,7 +259,7 @@ func GenerateSM2(priv crypto.Signer, req *csr.CertificateRequest) (csr []byte, e
 		}
 	}
 
-	csr, err = sm2.CreateCertificateRequest(rand.Reader, &tpl, priv)
+	csr, err = gmx509.CreateCertificateRequest(rand.Reader, &tpl, priv)
 	if err != nil {
 		//log.Fatalf("failed to generate a CSR: %v", err)
 		err = errors.New("")
@@ -281,7 +281,7 @@ type BasicConstraints struct {
 }
 
 // appendCAInfoToCSR appends CAConfig BasicConstraint extension to a CSR
-func appendCAInfoToCSRSm2(reqConf *csr.CAConfig, csr *sm2.CertificateRequest) error {
+func appendCAInfoToCSRSm2(reqConf *csr.CAConfig, csr *gmx509.CertificateRequest) error {
 	pathlen := reqConf.PathLength
 	if pathlen == 0 && !reqConf.PathLenZero {
 		pathlen = -1

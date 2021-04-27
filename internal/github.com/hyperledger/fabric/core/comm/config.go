@@ -11,7 +11,8 @@ Please review third_party pinning scripts and patches for more details.
 package comm
 
 import (
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
+
 	//"crypto/tls"
 	//"crypto/x509"
 	tls "github.com/tjfoc/gmtls"
@@ -97,7 +98,7 @@ type SecureOptions struct {
 	// VerifyCertificate, if not nil, is called after normal
 	// certificate verification by either a TLS client or server.
 	// If it returns a non-nil error, the handshake is aborted and that error results.
-	VerifyCertificate func(rawCerts [][]byte, verifiedChains [][]*sm2.Certificate) error
+	VerifyCertificate func(rawCerts [][]byte, verifiedChains [][]*gmx509.Certificate) error
 	// PEM-encoded X509 public key to be used for TLS communication
 	Certificate []byte
 	// PEM-encoded private key to be used for TLS communication

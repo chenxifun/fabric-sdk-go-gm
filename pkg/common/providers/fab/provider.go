@@ -8,7 +8,7 @@ package fab
 
 import (
 	reqContext "context"
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	tls "github.com/tjfoc/gmtls"
 	"time"
 
@@ -161,10 +161,10 @@ type Providers interface {
 // cert pool implementation.
 type CertPool interface {
 	// Get returns the cert pool, optionally adding the provided certs
-	Get() (*sm2.CertPool, error)
+	Get() (*gmx509.CertPool, error)
 	//Add allows adding certificates to CertPool
 	//Call Get() after Add() to get the updated certpool
-	Add(certs ...*sm2.Certificate)
+	Add(certs ...*gmx509.Certificate)
 }
 
 // MetricsProvider represents a provider of metrics.

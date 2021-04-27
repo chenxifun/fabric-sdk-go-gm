@@ -8,7 +8,7 @@ package peer
 
 import (
 	reqContext "context"
-	"github.com/tjfoc/gmsm/sm2"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 	credentials "github.com/tjfoc/gmtls/gmcredentials"
 	"strconv"
 	"strings"
@@ -49,7 +49,7 @@ type peerEndorser struct {
 
 type peerEndorserRequest struct {
 	target             string
-	certificate        *sm2.Certificate
+	certificate        *gmx509.Certificate
 	serverHostOverride string
 	config             fab.EndpointConfig
 	kap                keepalive.ClientParameters
@@ -76,7 +76,7 @@ func newPeerEndorser(endorseReq *peerEndorserRequest) (*peerEndorser, error) {
 			return nil, err
 		}
 		//verify if certificate was expired or not yet valid
-		tlsConfig.VerifyPeerCertificate = func(rawCerts [][]byte, verifiedChains [][]*sm2.Certificate) error {
+		tlsConfig.VerifyPeerCertificate = func(rawCerts [][]byte, verifiedChains [][]*gmx509.Certificate) error {
 			return verifier.VerifyPeerCertificate(rawCerts, verifiedChains)
 		}
 		grpcOpts = append(grpcOpts, grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)))
