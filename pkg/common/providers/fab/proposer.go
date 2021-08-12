@@ -44,6 +44,7 @@ func WithCreator(creator []byte) TxnHeaderOpt {
 type ProposalSender interface {
 	CreateTransactionHeader(opts ...TxnHeaderOpt) (TransactionHeader, error)
 	SendTransactionProposal(*TransactionProposal, []ProposalProcessor) ([]*TransactionProposalResponse, error)
+	SendBsnTransactionProposal(proposal *pb.SignedProposal, targets []ProposalProcessor) ([]*TransactionProposalResponse, error)
 }
 
 // TransactionID provides the identifier of a Fabric transaction proposal.
@@ -86,7 +87,8 @@ type ProcessProposalRequest struct {
 type TransactionProposalResponse struct {
 	Endorser string
 	// Status is the EndorserStatus
-	Status int32
+	Status  int32
+	Message string
 	// ChaincodeStatus is the status returned by Chaincode
 	ChaincodeStatus int32
 	*pb.ProposalResponse

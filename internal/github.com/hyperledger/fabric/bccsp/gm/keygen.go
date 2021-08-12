@@ -17,7 +17,6 @@ package gm
 
 import (
 	"fmt"
-
 	"github.com/BSNDA/fabric-sdk-go-gm/internal/github.com/hyperledger/fabric/bccsp"
 	"github.com/tjfoc/gmsm/sm2"
 )

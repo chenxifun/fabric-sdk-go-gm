@@ -165,35 +165,39 @@ type CommitTxHandler struct {
 
 //Handle handles commit tx
 func (c *CommitTxHandler) Handle(requestContext *RequestContext, clientContext *ClientContext) {
-	txnID := requestContext.Response.TransactionID
+	//txnID := requestContext.Response.TransactionID
 
 	//Register Tx event
-	reg, statusNotifier, err := clientContext.EventService.RegisterTxStatusEvent(string(txnID)) // TODO: Change func to use TransactionID instead of string
-	if err != nil {
-		requestContext.Error = errors.Wrap(err, "error registering for TxStatus event")
-		return
-	}
-	defer clientContext.EventService.Unregister(reg)
+	//reg, statusNotifier, err := clientContext.EventService.RegisterTxStatusEvent(string(txnID)) // TODO: Change func to use TransactionID instead of string
+	//if err != nil {
+	//	requestContext.Error = errors.Wrap(err, "error registering for TxStatus event")
+	//	return
+	//}
+	//defer clientContext.EventService.Unregister(reg)
 
-	_, err = createAndSendTransaction(clientContext.Transactor, requestContext.Response.Proposal, requestContext.Response.Responses)
+	res, err := createAndSendTransaction(clientContext.Transactor, requestContext.Response.Proposal, requestContext.Response.Responses)
 	if err != nil {
 		requestContext.Error = errors.Wrap(err, "CreateAndSendTransaction failed")
 		return
 	}
 
-	select {
-	case txStatus := <-statusNotifier:
-		requestContext.Response.TxValidationCode = txStatus.TxValidationCode
+	//select {
+	//case txStatus := <-statusNotifier:
+	//	requestContext.Response.TxValidationCode = txStatus.TxValidationCode
+	//
+	//	if txStatus.TxValidationCode != pb.TxValidationCode_VALID {
+	//		requestContext.Error = status.New(status.EventServerStatus, int32(txStatus.TxValidationCode),
+	//			"received invalid transaction", nil)
+	//		return
+	//	}
+	//case <-requestContext.Ctx.Done():
+	//	requestContext.Error = status.New(status.ClientStatus, status.Timeout.ToInt32(),
+	//		"Execute didn't receive block event", nil)
+	//	return
+	//}
 
-		if txStatus.TxValidationCode != pb.TxValidationCode_VALID {
-			requestContext.Error = status.New(status.EventServerStatus, int32(txStatus.TxValidationCode),
-				"received invalid transaction", nil)
-			return
-		}
-	case <-requestContext.Ctx.Done():
-		requestContext.Error = status.New(status.ClientStatus, status.Timeout.ToInt32(),
-			"Execute didn't receive block event", nil)
-		return
+	if res != nil {
+		requestContext.Response.OrderDataLen = res.DataLen
 	}
 
 	//Delegate to next step if any

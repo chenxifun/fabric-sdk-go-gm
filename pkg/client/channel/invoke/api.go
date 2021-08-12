@@ -50,6 +50,9 @@ type Request struct {
 	// The invoked chaincode (specified by ChaincodeID) may optionally be added to the invocation
 	// chain along with any collections, otherwise it may be omitted.
 	InvocationChain []*fab.ChaincodeCall
+
+	//BSN 适配增加的参数
+	BsnProposal *fab.RequestProposal
 }
 
 //Response contains response parameters for query and execute transaction
@@ -60,6 +63,8 @@ type Response struct {
 	TxValidationCode pb.TxValidationCode
 	ChaincodeStatus  int32
 	Payload          []byte
+	BlockNumber      uint64
+	OrderDataLen     int
 }
 
 //Handler for chaining transaction executions

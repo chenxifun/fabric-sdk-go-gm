@@ -12,6 +12,7 @@ package operations
 
 import (
 	gmx509 "github.com/tjfoc/gmsm/x509"
+	// "crypto/tls"
 	tls "github.com/tjfoc/gmtls"
 	//"crypto/x509"
 	"io/ioutil"

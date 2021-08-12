@@ -36,6 +36,15 @@ func (t *MockTransactor) SendTransactionProposal(proposal *fab.TransactionPropos
 	return response, nil
 }
 
+func (t *MockTransactor) SendBsnTransactionProposal(proposal *pb.SignedProposal, targets []fab.ProposalProcessor) ([]*fab.TransactionProposalResponse, error) {
+	response := make([]*fab.TransactionProposalResponse, 1)
+	response[0] = &fab.TransactionProposalResponse{Endorser: "example.com", Status: 200,
+		ProposalResponse: &pb.ProposalResponse{Response: &pb.Response{Message: "success", Payload: []byte("abc"), Status: http.StatusOK},
+			Endorsement: &pb.Endorsement{Endorser: []byte("example.com"), Signature: []byte("signature")}},
+	}
+	return response, nil
+}
+
 // CreateTransaction create a transaction with proposal response.
 func (t *MockTransactor) CreateTransaction(request fab.TransactionRequest) (*fab.Transaction, error) {
 	response := &fab.Transaction{
@@ -49,6 +58,13 @@ func (t *MockTransactor) CreateTransaction(request fab.TransactionRequest) (*fab
 
 // SendTransaction send a transaction to the chain’s orderer service (one or more orderer endpoints) for consensus and committing to the ledger.
 func (t *MockTransactor) SendTransaction(tx *fab.Transaction) (*fab.TransactionResponse, error) {
+	response := &fab.TransactionResponse{
+		Orderer: "example.com",
+	}
+	return response, nil
+}
+
+func (t *MockTransactor) SendBsnTransaction(tx *fab.Transaction) (*fab.TransactionResponse, error) {
 	response := &fab.TransactionResponse{
 		Orderer: "example.com",
 	}

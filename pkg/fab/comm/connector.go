@@ -79,7 +79,7 @@ func (cc *CachingConnector) Close() {
 	// bug in the calling code, but it's not good to panic here.
 	if cc.janitorDone == nil {
 		cc.lock.RUnlock()
-		logger.Warn("Trying to close connector after already closed")
+		//logger.Warn("Trying to close connector after already closed")
 		return
 	}
 	cc.lock.RUnlock()

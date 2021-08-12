@@ -303,3 +303,17 @@ func (cc *Client) RegisterChaincodeEvent(chainCodeID string, eventFilter string)
 func (cc *Client) UnregisterChaincodeEvent(registration fab.Registration) {
 	cc.eventService.Unregister(registration)
 }
+
+func (cc *Client) RegisterTxStatusEvent(txId string) (fab.Registration, <-chan *fab.TxStatusEvent, error) {
+	// Register callback for CE
+	return cc.eventService.RegisterTxStatusEvent(txId)
+}
+
+func (cc *Client) Unregister(registration fab.Registration) {
+	cc.eventService.Unregister(registration)
+}
+
+func (cc *Client) RegisterBlockEvent(filter ...fab.BlockFilter) (fab.Registration, <-chan *fab.BlockEvent, error) {
+	// Register callback for CE
+	return cc.eventService.RegisterBlockEvent(filter...)
+}

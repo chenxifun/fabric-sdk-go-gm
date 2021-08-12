@@ -7,7 +7,6 @@ SPDX-License-Identifier: Apache-2.0
 package msp
 
 import (
-	"encoding/hex"
 	"fmt"
 	"strings"
 
@@ -176,8 +175,6 @@ func (mgr *IdentityManager) getEmbeddedPrivateKey(username string) (core.Key, er
 }
 
 func (mgr *IdentityManager) getPrivateKeyPemFromKeyStore(username string, ski []byte) ([]byte, error) {
-	fmt.Println(username)
-	fmt.Println(hex.EncodeToString(ski))
 	if mgr.mspPrivKeyStore == nil {
 		return nil, nil
 	}

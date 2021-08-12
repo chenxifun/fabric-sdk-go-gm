@@ -26,6 +26,20 @@ import (
 	"github.com/tjfoc/gmsm/sm2"
 )
 
+func NewSmPrivateKey(privateKey *sm2.PrivateKey) bccsp.Key {
+
+	return &gmsm2PrivateKey{
+		privKey: privateKey,
+	}
+}
+
+func NewSmPublicKey(publicKey *sm2.PublicKey) bccsp.Key {
+
+	return &gmsm2PublicKey{
+		pubKey: publicKey,
+	}
+}
+
 type gmsm2PrivateKey struct {
 	privKey *sm2.PrivateKey
 }

@@ -4,7 +4,7 @@
 
 module github.com/BSNDA/fabric-sdk-go-gm/test/integration
 
-replace github.com/BSNDA/fabric-sdk-go-gm => ../../
+go 1.14
 
 require (
 	github.com/BSNDA/fabric-sdk-go-gm v0.0.0-00010101000000-000000000000
@@ -15,4 +15,4 @@ require (
 	google.golang.org/grpc v1.31.0
 )
 
-go 1.13
+replace github.com/BSNDA/fabric-sdk-go-gm => github.com/chenxifun/fabric-sdk-go-gm v1.4.3-bsn-0.2

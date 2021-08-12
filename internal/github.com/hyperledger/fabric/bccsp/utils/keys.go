@@ -30,9 +30,9 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 
 	"github.com/tjfoc/gmsm/sm2"
-	gmx509 "github.com/tjfoc/gmsm/x509"
 )
 
 // struct to hold info required for PKCS#8

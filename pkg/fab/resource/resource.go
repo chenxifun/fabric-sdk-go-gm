@@ -321,9 +321,9 @@ func InstallChaincode(reqCtx reqContext.Context, req InstallChaincodeRequest, ta
 	if req.Name == "" {
 		return nil, fab.EmptyTransactionID, errors.New("chaincode name required")
 	}
-	if req.Path == "" {
-		return nil, fab.EmptyTransactionID, errors.New("chaincode path required")
-	}
+	//if req.Path == "" {
+	//	return nil, fab.EmptyTransactionID, errors.New("chaincode path required")
+	//}
 	if req.Version == "" {
 		return nil, fab.EmptyTransactionID, errors.New("chaincode version required")
 	}

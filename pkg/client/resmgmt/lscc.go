@@ -39,6 +39,7 @@ type chaincodeDeployRequest struct {
 	Name       string
 	Path       string
 	Version    string
+	Lang       pb.ChaincodeSpec_Type
 	Args       [][]byte
 	Policy     *common.SignaturePolicyEnvelope
 	CollConfig []*common.CollectionConfig
@@ -51,20 +52,26 @@ func createChaincodeDeployProposal(txh fab.TransactionHeader, deploy chaincodePr
 	args := [][]byte{}
 	args = append(args, []byte(channelID))
 
+	//ccds := &pb.ChaincodeDeploymentSpec{ChaincodeSpec: &pb.ChaincodeSpec{
+	//	Type: pb.ChaincodeSpec_GOLANG, ChaincodeId: &pb.ChaincodeID{Name: chaincode.Name, Path: chaincode.Path, Version: chaincode.Version},
+	//	Input: &pb.ChaincodeInput{Args: chaincode.Args}}}
+
 	ccds := &pb.ChaincodeDeploymentSpec{ChaincodeSpec: &pb.ChaincodeSpec{
-		Type: pb.ChaincodeSpec_GOLANG, ChaincodeId: &pb.ChaincodeID{Name: chaincode.Name, Path: chaincode.Path, Version: chaincode.Version},
+		Type: chaincode.Lang, ChaincodeId: &pb.ChaincodeID{Name: chaincode.Name, Path: chaincode.Path, Version: chaincode.Version},
 		Input: &pb.ChaincodeInput{Args: chaincode.Args}}}
+
 	ccdsBytes, err := protoutil.Marshal(ccds)
 	if err != nil {
 		return nil, errors.WithMessage(err, "marshal of chaincode deployment spec failed")
 	}
 	args = append(args, ccdsBytes)
 
-	chaincodePolicyBytes, err := protoutil.Marshal(chaincode.Policy)
-	if err != nil {
-		return nil, errors.WithMessage(err, "marshal of chaincode policy failed")
-	}
-	args = append(args, chaincodePolicyBytes)
+	//chaincodePolicyBytes, err := protoutil.Marshal(chaincode.Policy)
+	//if err != nil {
+	//	return nil, errors.WithMessage(err, "marshal of chaincode policy failed")
+	//}
+	//args = append(args, chaincodePolicyBytes)
+	args = append(args, []byte{})
 
 	args = append(args, []byte(escc))
 	args = append(args, []byte(vscc))

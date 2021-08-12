@@ -175,11 +175,15 @@ func broadcastEnvelope(reqCtx reqContext.Context, envelope *fab.SignedEnvelope, 
 
 	// Iterate them in a random order and try broadcasting 1 by 1
 	var errResp error
+	all := 0
+	dataLen := len(envelope.Payload) + len(envelope.Signature)
 	for _, i := range rand.Perm(len(randOrderers)) {
 		resp, err := sendBroadcast(reqCtx, envelope, randOrderers[i], ctxClient)
+		all = all + dataLen
 		if err != nil {
 			errResp = err
 		} else {
+			resp.DataLen = all
 			return resp, nil
 		}
 	}

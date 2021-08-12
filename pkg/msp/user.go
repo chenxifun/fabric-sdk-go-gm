@@ -7,13 +7,29 @@ SPDX-License-Identifier: Apache-2.0
 package msp
 
 import (
+	"github.com/BSNDA/fabric-sdk-go-gm/internal/github.com/hyperledger/fabric/bccsp/gm"
+	"github.com/BSNDA/fabric-sdk-go-gm/pkg/core/cryptosuite/bccsp/wrapper"
 	"github.com/golang/protobuf/proto"
+	"github.com/tjfoc/gmsm/sm2"
 
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/providers/core"
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/providers/msp"
 	pb_msp "github.com/hyperledger/fabric-protos-go/msp"
 	"github.com/pkg/errors"
 )
+
+func NewUserIdentifier(userName, mspId string, cert []byte, key *sm2.PrivateKey) *User {
+
+	kk := gm.NewSmPrivateKey(key)
+
+	u := &User{
+		id:                    userName,
+		mspID:                 mspId,
+		enrollmentCertificate: cert,
+		privateKey:            wrapper.GetKey(kk),
+	}
+	return u
+}
 
 // User is a representation of a Fabric user
 type User struct {

@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package mocks
 
 import (
+	pb "github.com/hyperledger/fabric-protos-go/peer"
 	"time"
 
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/providers/context"
@@ -40,6 +41,12 @@ func (t *MockTransactor) SendTransactionProposal(proposal *fab.TransactionPropos
 	return txn.SendProposal(rqtx, proposal, targets)
 }
 
+func (t *MockTransactor) SendBsnTransactionProposal(proposal *pb.SignedProposal, targets []fab.ProposalProcessor) ([]*fab.TransactionProposalResponse, error) {
+	rqtx, cancel := contextImpl.NewRequest(t.Ctx, contextImpl.WithTimeout(10*time.Second))
+	defer cancel()
+	return txn.SendBsnProposal(rqtx, proposal, targets)
+}
+
 // CreateTransaction create a transaction with proposal response.
 func (t *MockTransactor) CreateTransaction(request fab.TransactionRequest) (*fab.Transaction, error) {
 	return txn.New(request)
@@ -50,4 +57,10 @@ func (t *MockTransactor) SendTransaction(tx *fab.Transaction) (*fab.TransactionR
 	rqtx, cancel := contextImpl.NewRequest(t.Ctx, contextImpl.WithTimeout(10*time.Second))
 	defer cancel()
 	return txn.Send(rqtx, tx, t.Orderers)
+}
+
+func (t *MockTransactor) SendBsnTransaction(tx *fab.Transaction) (*fab.TransactionResponse, error) {
+	rqtx, cancel := contextImpl.NewRequest(t.Ctx, contextImpl.WithTimeout(10*time.Second))
+	defer cancel()
+	return txn.BsnSend(rqtx, tx, t.Orderers)
 }

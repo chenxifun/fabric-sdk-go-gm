@@ -72,6 +72,7 @@ type InstantiateCCRequest struct {
 	Name       string
 	Path       string
 	Version    string
+	Lang       pb.ChaincodeSpec_Type
 	Args       [][]byte
 	Policy     *common.SignaturePolicyEnvelope
 	CollConfig []*common.CollectionConfig
@@ -87,6 +88,7 @@ type UpgradeCCRequest struct {
 	Name       string
 	Path       string
 	Version    string
+	Lang       pb.ChaincodeSpec_Type
 	Args       [][]byte
 	Policy     *common.SignaturePolicyEnvelope
 	CollConfig []*common.CollectionConfig
@@ -474,8 +476,11 @@ func (rc *Client) adjustTargets(targets []fab.Peer, req InstallCCRequest, retry 
 }
 
 func checkRequiredInstallCCParams(req InstallCCRequest) error {
-	if req.Name == "" || req.Version == "" || req.Path == "" || req.Package == nil {
-		return errors.New("Chaincode name, version, path and chaincode package are required")
+	//if req.Name == "" || req.Version == "" || req.Path == "" || req.Package == nil {
+	//	return errors.New("Chaincode name, version, path and chaincode package are required")
+	//}
+	if req.Name == "" || req.Version == "" || req.Package == nil {
+		return errors.New("Chaincode name, version and chaincode package are required")
 	}
 	return nil
 }
@@ -872,8 +877,13 @@ func checkRequiredCCProposalParams(channelID string, req InstantiateCCRequest) e
 		return errors.New("must provide channel ID")
 	}
 
-	if req.Name == "" || req.Version == "" || req.Path == "" || req.Policy == nil {
-		return errors.New("Chaincode name, version, path and policy are required")
+	// 去掉背书策略 || req.Policy == nil
+	// java、node不传path 去掉链码路径 || req.Path == ""
+	//if req.Name == "" || req.Version == "" || req.Path == "" || req.Policy == nil {
+	//	return errors.New("Chaincode name, version, path and policy are required")
+	//}
+	if req.Name == "" || req.Version == "" {
+		return errors.New("Chaincode name, version are required")
 	}
 	return nil
 }

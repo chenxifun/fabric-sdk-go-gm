@@ -22,6 +22,7 @@ type TransactionRequest struct {
 type Sender interface {
 	CreateTransaction(request TransactionRequest) (*Transaction, error)
 	SendTransaction(tx *Transaction) (*TransactionResponse, error)
+	SendBsnTransaction(tx *Transaction) (*TransactionResponse, error)
 }
 
 // The Transaction object created from an endorsed proposal.
@@ -33,4 +34,5 @@ type Transaction struct {
 // TransactionResponse contains information returned by the orderer.
 type TransactionResponse struct {
 	Orderer string
+	DataLen int
 }

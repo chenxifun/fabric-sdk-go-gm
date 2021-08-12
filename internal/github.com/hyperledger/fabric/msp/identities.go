@@ -27,7 +27,7 @@ import (
 	logging "github.com/BSNDA/fabric-sdk-go-gm/internal/github.com/hyperledger/fabric/sdkpatch/logbridge"
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-protos-go/msp"
-	//"github.com/BSNDA/fabric-sdk-go-gm/third_party/github.com/hyperledger/fabric/protos/msp"
+	//"github.com/hyperledger/fabric-protos-go/msp"
 	"github.com/pkg/errors"
 )
 

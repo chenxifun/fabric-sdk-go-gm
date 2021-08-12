@@ -15,7 +15,6 @@ import (
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/core/config/endpoint"
 	"github.com/BSNDA/fabric-sdk-go-gm/test/metadata"
 
-	// "crypto/x509"
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/providers/fab"
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/providers/msp"
 	"github.com/BSNDA/fabric-sdk-go-gm/pkg/common/providers/test/mockfab"
