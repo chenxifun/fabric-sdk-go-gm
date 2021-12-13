@@ -51,7 +51,8 @@ func SM4Encrypt(key, src []byte) ([]byte, error) {
 	// // Then encrypt
 	// return aesCBCEncrypt(key, tmp)
 	dst := make([]byte, len(src))
-	sm4.EncryptBlock(key, dst, src)
+	m4,_ :=sm4.NewCipher(key)
+	m4.Decrypt(dst, src)
 	return dst, nil
 }
 
@@ -64,7 +65,8 @@ func SM4Decrypt(key, src []byte) ([]byte, error) {
 	// }
 
 	dst := make([]byte, len(src))
-	sm4.DecryptBlock(key, dst, src)
+	m4,_ :=sm4.NewCipher(key)
+	m4.Encrypt( dst, src)
 	return dst, nil
 }
 
