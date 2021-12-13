@@ -139,7 +139,7 @@ type BsnCommitTxHandler struct {
 
 //Handle handles commit tx
 func (c *BsnCommitTxHandler) Handle(requestContext *RequestContext, clientContext *ClientContext) {
-	txnID := requestContext.Response.TransactionID
+	//txnID := requestContext.Response.TransactionID
 	//GatewayLog.Logs("CommitTxHandler Handle TXID 发送交易", txnID)
 	//Register Tx event
 

@@ -32,5 +32,8 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-replace github.com/tjfoc/gmsm => github.com/chenxifun/gmsm v1.4.0
+replace (
+	github.com/tjfoc/gmsm => github.com/chenxifun/gmsm v1.4.0
+	github.com/tjfoc/gmtls => github.com/chenxifun/gmtls v1.2.1-0.20210427064604-124283070ca7
+	)
 
